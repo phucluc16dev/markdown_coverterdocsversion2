@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <!-- Main Content Area -->
+        <div class="col-lg-8">
+            <!-- Markdown Input Section -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fab fa-markdown me-2"></i>Nhập nội dung Markdown
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <textarea id="markdownInput" class="form-control border-0" rows="10"
+                              placeholder="# Tiêu đề chính
+
+## Tiêu đề phụ
+
+Đây là đoạn văn bản **in đậm** và *in nghiêng*.
+
+### Danh sách
+- Mục 1
+- Mục 2
+- Mục 3
+
+### Bảng
+| Cột 1 | Cột 2 | Cột 3 |
+|-------|-------|-------|
+| A     | B     | C     |
+| 1     | 2     | 3     |
+
+> Đây là một trích dẫn
+
+```python
+print('Hello World!')
+```"></textarea>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-eye me-2"></i>Xem trước
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="previewArea" class="markdown-preview">
+                        <p class="text-muted text-center py-5">
+                            <i class="fas fa-file-alt fa-2x mb-3"></i><br>
+                            Xem trước sẽ hiển thị ở đây khi bạn nhập Markdown
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <div class="sidebar-sticky">
+            <!-- Author Card -->
+            <div class="card shadow-sm mb-4 author-card">
+                <div class="card-body text-center">
+                    <div class="avatar-circle mb-3">
+                        <img src="{{ url_for('static', filename='images/avatar.jpg') }}" alt="Avatar" class="avatar-img">
+                    </div>
+                    <h5 class="card-title text-white mb-1">Trần Phúc Lực</h5>
+                    <p class="card-text text-white-50 mb-0">Developer</p>
+                </div>
+            </div>
+
+
+            <!-- Statistics Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-warning text-dark">
+                    <h6 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>Thống kê
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="stat-item">
+                        <i class="fas fa-file-word text-primary me-2"></i>
+                        <span>Từ: <strong id="wordCount">0</strong></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-font text-info me-2"></i>
+                        <span>Ký tự: <strong id="charCount">0</strong></span>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-list-ol text-secondary me-2"></i>
+                        <span>Dòng: <strong id="lineCount">0</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pandoc Status -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div id="pandocStatus" class="text-center">
+                        {% if pandoc_status.status == 'success' %}
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle me-2"></i>
+                                {{ pandoc_status.version }}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger mb-0">
+                                <i class="fas fa-times-circle me-2"></i>
+                                {{ pandoc_status.message }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-grid gap-3">
+                <button id="convertBtn" class="btn btn-primary btn-lg" 
+                        {% if pandoc_status.status != 'success' %}disabled{% endif %}>
+                    <i class="fas fa-sync-alt me-2"></i>Chuyển đổi sang Word
+                </button>
+                
+                <button id="clearBtn" class="btn btn-outline-secondary">
+                    <i class="fas fa-trash me-2"></i>Xóa tất cả
+                </button>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="card shadow-sm mt-4">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-address-card me-2"></i>Liên hệ
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="contact-item">
+                        <i class="fab fa-whatsapp text-success me-2"></i>
+                        <span>Zalo: 0367.545.048</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-facebook text-primary me-2"></i>
+                        <span>Facebook: fb.com/phuclucc</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-globe text-info me-2"></i>
+                        <span>TikTok: @luc.sinh.vien</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fab fa-youtube text-danger me-2"></i>
+                        <span>YouTube: @phucluccc</span>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Upload Area -->
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="text-center">
+                        <h5 class="card-title mb-3">
+                            <i class="fas fa-upload me-2"></i>Hoặc tải file Markdown lên
+                        </h5>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Kéo thả file .md hoặc click để chọn file</p>
+                            <input type="file" id="fileInput" accept=".md,.txt" style="display: none;">
+                            <button class="btn btn-outline-primary" onclick="document.getElementById('fileInput').click()">
+                                <i class="fas fa-folder-open me-2"></i>Chọn file
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Initialize the app when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.MarkdownConverter) {
+            window.MarkdownConverter.init();
+        }
+    });
+</script>
+{% endblock %}
